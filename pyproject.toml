@@ -1,0 +1,82 @@
+[tool.poetry]
+name = "future-power"
+version = "0.1.0"
+description = "Calculating power consumption price"
+authors = ["Minwook Park <mwpark0975@gmail.com>"]
+packages = [
+  { include = "mom_data" }
+]
+
+[tool.poetry.scripts]
+mom-data = "mom_data.main:main"
+
+
+[tool.poe.tasks]
+isort = "isort --profile black -m 3 ."
+autoflake = "autoflake --recursive --in-place --remove-unused-variables ."
+black = "black ."
+isort-check = "isort --profile black -m 3 --check-only ."
+black-check = "black --check --line-length=80 ."
+style-check = ["isort-check", "black-check"]
+style = ["isort", "autoflake", "black"]
+lint = "flakehell lint"
+test = "pytest"
+all = ["style", "lint"]
+
+
+[tool.poetry.dependencies]
+python = "^3.8.5"
+psycopg2-binary = "*"
+python-dotenv = "^0.17.1"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+mypy = "^0.812"
+pre-commit = "^2.13.0"
+black = "^21.5b1"
+flakehell = "^0.9.0"
+poethepoet = "^0.10.0"
+isort = "^5.8.0"
+autoflake = "^1.4"
+pep8-naming = "^0.11.1"
+
+
+[tool.black]
+line-length = 80
+
+
+[tool.flakehell]
+exclude = ["README.rst", "README.md"]
+format = "colored"
+max_line_length = 80
+show_source = true
+extended_default_ignore= [] 
+
+[tool.flakehell.plugins]
+flake8-bandit = ["+*", "-S322"]
+flake8-bugbear = ["+*"]
+flake8-builtins = ["+*"]
+flake8-comprehensions = ["+*"]
+flake8-darglint = ["+*"]
+flake8-docstrings = ["+*"]
+flake8-eradicate = ["+*"]
+flake8-isort = ["+*"]
+flake8-mutable = ["+*"]
+flake8-pytest-style = ["+*"]
+flake8-spellcheck = ["+*"]
+mccabe = ["+*"]
+pep8-naming = ["+*"]
+pycodestyle = ["+*"]
+pyflakes = ["+*"]
+pylint = ["+*"]
+
+[tool.flakehell.exceptions."tests/*.py"]
+flake8-bandit = ["-S101"]
+flake8-builtins = ["-A001"]
+pyflakes = ["-F811", "-F401"]
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
